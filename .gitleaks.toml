@@ -1,0 +1,14 @@
+# Secret-scanner settings for this repo.
+# The Firebase web config (apiKey) has to ship inside the page and is already public in the web
+# page. Access is controlled by Firestore rules and the key's API and website restrictions.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Firebase web config in the visualizer page"
+regexTarget = "line"
+regexes = ['''const CLOUD_CFG = \{"apiKey":''']
+
+[[allowlists]]
+description = "Vendored minified libraries and lock files"
+paths = ['''(?i)\.min\.js$''', '''(?i)package-lock\.json$''']
