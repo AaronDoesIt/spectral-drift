@@ -44,6 +44,43 @@ body.ui-hidden .stagebtns{display:none}
 .toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(7,8,12,.86);border:1px solid var(--line-2);padding:8px 14px;border-radius:var(--radius);font-size:12px;color:var(--fg);opacity:0;transition:opacity .3s;pointer-events:none;max-width:88%;text-align:center}
 .toast.show{opacity:1}
 
+/* ---------- light theme (the dials; the picture and its overlay buttons stay dark) ---------- */
+body.theme-light{
+  --bg:#eef0f5; --panel:#ffffff; --panel-2:#f1f3f8; --line:#d8dce6; --line-2:#bfc6d4;
+  --fg:#161a24; --muted:#555e72; --dim:#7d8597; --accent:#e0521f; --accent-ink:#ffffff;
+  --bass:#e0521f; --mid:#c99300; --treb:#0d9e91; color-scheme:light;
+}
+body.theme-light #stage{--fg:#e9ecf4; --line-2:#2f3750; --muted:#8c95aa; color-scheme:dark}
+body.theme-light .panel{background:rgba(241,243,248,.7)}
+body.theme-light .tipbox{background:rgba(255,255,255,.98);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+body.theme-light .led,body.theme-light .hitled{background:#cfd4de}
+body.theme-light .stack .chip i{background:#bfc6d4}
+/* ---------- Help & settings ---------- */
+.appset{display:grid;gap:10px;padding:4px 0 6px}
+.appset .row{display:flex;flex-wrap:wrap;gap:6px}
+.appset .note{margin:0;font-size:12px;color:var(--muted);line-height:1.45}
+/* ---------- tour + help sheet ---------- */
+.tour{position:fixed;inset:0;z-index:90}
+.tour[hidden],.helpsheet[hidden]{display:none}
+.tour .veil{position:absolute;inset:0;background:rgba(0,0,0,.62)}
+.tour.spot .veil{background:transparent}
+.tour .hole{position:fixed;border-radius:8px;border:2px solid var(--accent);box-shadow:0 0 0 9999px rgba(0,0,0,.62);pointer-events:none;transition:left .25s,top .25s,width .25s,height .25s}
+.tour .hole[hidden]{display:none}
+.tcard{position:fixed;width:min(340px,calc(100vw - 24px));background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:10px;padding:14px 16px 12px;box-shadow:0 14px 40px rgba(0,0,0,.45);font-size:13px;line-height:1.5}
+.tcard h4{margin:0 0 6px;font-size:16px;font-weight:600;letter-spacing:.01em}
+.tcard p{margin:0 0 12px;color:var(--muted)}
+.tcard .tnav{display:flex;align-items:center;gap:6px}
+.tcard .tdots{flex:1;font-family:var(--font-data);font-size:11px;color:var(--dim)}
+.helpsheet{position:fixed;inset:0;z-index:90;display:grid;place-items:center;background:rgba(0,0,0,.62);padding:max(12px,env(safe-area-inset-top,0px)) 12px max(12px,env(safe-area-inset-bottom,0px))}
+.helpsheet .hbox{width:min(520px,100%);max-height:100%;overflow:auto;background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:10px;padding:16px 18px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.helpsheet .hhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.helpsheet .hhead h4{flex:1;margin:0;font-size:17px;font-weight:600}
+.helpsheet details{border-top:1px solid var(--line);padding:9px 0}
+.helpsheet summary{cursor:pointer;font-weight:600;font-size:13px}
+.helpsheet details p{margin:7px 0 2px;color:var(--muted);font-size:13px;line-height:1.55}
+.helpsheet .hfoot{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.helpsheet .hfoot a{text-decoration:none}
+
 /* ---------- dock ---------- */
 #dock{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;min-width:0}
 .dock-head,.transport,.dock-body{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -254,6 +291,55 @@ body.ui-hidden.interactive .showbtn{display:grid}
     </div>
     <button class="icobtn showbtn" id="btnShow" title="Show controls (H)" aria-label="Show controls"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="toast" id="toast"></div>
+  </div>
+
+  <div class="tour" id="tour" hidden role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+    <div class="veil"></div>
+    <div class="hole" id="tourHole" hidden></div>
+    <div class="tcard" id="tourCard">
+      <h4 id="tourTitle"></h4>
+      <p id="tourText"></p>
+      <div class="tnav">
+        <span class="tdots" id="tourDots"></span>
+        <button class="btn sm" id="tourSkip" type="button">Skip</button>
+        <button class="btn sm" id="tourBack" type="button">Back</button>
+        <button class="btn sm" id="tourNext" type="button">Next</button>
+      </div>
+    </div>
+  </div>
+  <div class="helpsheet" id="helpSheet" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="hbox">
+      <div class="hhead"><h4 id="helpTitle">Help &amp; FAQ</h4><button class="btn sm" id="helpClose" type="button">Close</button></div>
+      <details open><summary>Nothing is moving. How do I start?</summary>
+        <p>Press ▶ to play the built-in demo loop. To follow your own music, open <b>Source ▾</b> and pick what Spectral Drift should listen to.</p></details>
+      <details data-plat="android"><summary>How do I visualize Spotify or YouTube Music?</summary>
+        <p>Start the music, come back to Spectral Drift and choose <b>Source ▾ → Device audio</b>. Android only lets the app hear what is playing while Spectral Drift is open. Some Samsung phones send silence to Device audio; if the picture does not react, choose <b>Microphone</b> instead.</p></details>
+      <details data-plat="pc"><summary>How do I visualize what my PC is playing?</summary>
+        <p>Choose <b>Source ▾ → System audio</b>. It picks up everything this PC plays, from Spotify to a browser tab.</p></details>
+      <details data-plat="web"><summary>How do I visualize my own music?</summary>
+        <p><b>Source ▾ → Load a track…</b> plays audio files from your device. <b>Microphone</b> listens to the room. In desktop Chrome or Edge, <b>System audio</b> captures a tab or the whole screen: tick “Share audio” when the browser asks.</p></details>
+      <details><summary>Does it record me?</summary>
+        <p>No. The sound is analyzed on your device to draw the picture and is never recorded, stored or sent anywhere.</p></details>
+      <details><summary>How do I change how it looks?</summary>
+        <p>Pick a <b>Visualizer</b>, then step through its scenes with <b>Prev</b>, <b>Random</b> and <b>Next</b>. <b>Dials</b> opens Feel (motion, color pulse) and the visualizer's own dials<span data-need="#secPost">, plus post effects and color grading</span>. Many visualizers react to touch: drag to stir, spin or look around.</p></details>
+      <details><summary>Can I keep a look I like?</summary>
+        <p>Tap the bookmark button on the picture to save it. Saved looks live under <b>Dials → Saved looks</b>, where you can rename them<span data-need="#btnLookStart">, set one as the start-up look, or let auto-change crossfade through them</span>.<span data-need="#btnLooksExport"> <b>Export</b> saves them to a file you can <b>Import</b> on another device.</span></p></details>
+      <details data-plat="android"><summary>How do I get it on my TV?</summary>
+        <p>With a Chromecast or Google TV on the same Wi-Fi, the Cast button appears at the top right of the picture. Your phone keeps listening to the music and the TV draws the picture. Screen casting from Quick Settings also works.</p></details>
+      <details data-plat="android"><summary>Can it be my live wallpaper?</summary>
+        <p>Yes, if you want it: <b>Dials → Phone → Set as live wallpaper</b>. It is never turned on by itself.</p></details>
+      <details data-plat="pc web"><summary>Are there keyboard shortcuts?</summary>
+        <p>Yes. Space plays and pauses, N and P step through scenes, R picks a random one, F goes fullscreen and H hides the controls. The full list is under <b>Dials → Keys</b>.</p></details>
+      <details><summary>It runs slowly or uses a lot of battery.</summary>
+        <p>Open <b>Dials → More → Render quality</b> and choose <b>Fast</b>. A simpler visualizer such as Classic also helps.</p></details>
+      <details><summary>How do I hide the controls?</summary>
+        <p>The eye button on the picture hides everything but the visuals. Tap the menu button in the corner to bring the controls back.</p></details>
+      <div class="hfoot">
+        <button class="btn sm" id="helpTour" type="button">Take the tour</button>
+        <button class="btn sm" id="helpRate" type="button" hidden>Rate Spectral Drift</button>
+        <a class="btn sm" href="https://github.com/AaronDoesIt/spectral-drift/issues" target="_blank" rel="noopener">Report a problem</a>
+      </div>
+    </div>
   </div>
 
   <aside id="dock" class="collapsed">
@@ -654,6 +740,22 @@ body.ui-hidden.interactive .showbtn{display:grid}
         </div>
       </details>
 
+      <details id="secApp">
+        <summary>Help &amp; settings <small>theme · tour · rate</small></summary>
+        <div class="appset">
+          <div class="lab-sel"><span>Theme for the controls</span><select id="themeSel" aria-label="Theme">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="auto">Match this device</option>
+          </select></div>
+          <div class="row">
+            <button class="btn sm" id="btnTour" type="button">Take the tour</button>
+            <button class="btn sm" id="btnHelp" type="button">Help &amp; FAQ</button>
+            <button class="btn sm" id="btnRate" type="button" hidden>Rate Spectral Drift</button>
+          </div>
+          <p class="note" id="rateNote" hidden>Spectral Drift is made by one person. A rating takes ten seconds and is the biggest help in letting other people find it.</p>
+        </div>
+      </details>
       <details>
         <summary>Keys</summary>
         <div class="keys">
@@ -6008,6 +6110,116 @@ pinHeight(); window.addEventListener('resize', pinHeight);
 resize();
 try { ensureCtx(); } catch(e){ /* created on first tap instead */ }
 if (WALL){ document.body.classList.add('ui-hidden'); $('#hint').classList.add('gone'); }
+/* ---- Help & settings: theme, tour, FAQ, rating (port5_play.py) ---- */
+const RECV = !!(window.cast && window.cast.framework && window.cast.framework.CastReceiverContext);
+const PLAT = window.SDDesktop ? 'pc' : (android ? 'android' : 'web');
+const RATE_URL = PLAT === 'android' ? 'https://play.google.com/store/apps/details?id=com.aarondoesit.spectraldrift'
+               : PLAT === 'pc' ? 'https://apps.microsoft.com/detail/9P8FM3XZN945' : '';
+const THEME_KEY = 'spectral-drift-theme', TOUR_KEY = 'spectral-drift-tour';
+const themeMQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+function themeGet(){ try { return localStorage.getItem(THEME_KEY) || 'dark'; } catch(e){ return 'dark'; } }
+function themeApply(){
+  const t = themeGet(), light = t === 'light' || (t === 'auto' && themeMQ && themeMQ.matches);
+  document.body.classList.toggle('theme-light', !!light);
+  if ($('#themeSel')) $('#themeSel').value = t;
+}
+function rateApp(){
+  if (!RATE_URL) return;
+  if (android && typeof android.rateApp === 'function'){ try { android.rateApp(); return; } catch(e){} }
+  if (PLAT === 'android') location.href = RATE_URL; else window.open(RATE_URL, '_blank', 'noopener');
+}
+function helpOpen(){
+  document.querySelectorAll('#helpSheet [data-plat]').forEach(d => { d.hidden = !d.dataset.plat.split(' ').includes(PLAT); });
+  document.querySelectorAll('#helpSheet [data-need]').forEach(d => { d.hidden = !$(d.dataset.need); });   // text about controls this page version has
+  $('#helpSheet').hidden = false; $('#helpClose').focus();
+}
+function helpClose(){ $('#helpSheet').hidden = true; }
+const TOUR = { i:0, steps:[], open:false };
+function tourSteps(){
+  const src = PLAT === 'android' ? 'Device audio follows whatever your phone is playing, like Spotify or YouTube Music. The microphone and your own tracks work too.'
+            : PLAT === 'pc' ? 'System audio follows whatever this PC is playing. You can also load a track or use the microphone.'
+            : 'Load a track, use the microphone, or in desktop Chrome or Edge capture a tab with System audio.';
+  return [
+    { t:'Welcome to Spectral Drift', x:'It turns whatever is playing into moving pictures. This quick tour shows the few controls you need. You can replay it any time from Help & settings.' },
+    { s:'#btnPlay', t:'Press play', x:'Play starts the built-in demo loop, so you can see it move right away.' },
+    { s:'#btnSource', t:'Pick what it listens to', x:src },
+    { s:'#engineSel', t:'Choose a visualizer', x:document.querySelectorAll('#engineSel option').length + ' of them: MilkDrop and AVS from the Winamp days, 3D worlds, fluids, swarms, lasers and more.' },
+    { s:'.step-row', t:'Change the scene', x:'Prev, Random and Next step through the scenes or presets of the visualizer you picked. Many visualizers also react to touch and drag.' },
+    { s:'#btnExpand', t:'Fine-tune it', x:'Dials opens the Feel sliders (reaction, motion, color pulse) and each visualizer’s own settings.' },
+    { s:'#btnLookQuick', t:'Save a look', x:'Keep the look on screen and come back to it later. Your saved looks are listed under Dials → Saved looks.' },
+    { s:'#btnHide', t:'Just the picture', x:'Hide the controls for a clean picture, or go fullscreen with the button next to it. The menu button brings the controls back.' },
+    { t:'You’re all set', x:'Help & FAQ, the light theme and this tour live under Dials → Help & settings. Enjoy the show.' }
+  ];
+}
+function tourVisible(el){ if (!el) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight && getComputedStyle(el).visibility !== 'hidden'; }
+function tourShow(){
+  const st = TOUR.steps[TOUR.i], el = st.s ? $(st.s) : null, hole = $('#tourHole'), card = $('#tourCard');
+  $('#tourTitle').textContent = st.t; $('#tourText').textContent = st.x;
+  $('#tourDots').textContent = (TOUR.i + 1) + ' / ' + TOUR.steps.length;
+  $('#tourBack').hidden = TOUR.i === 0; $('#tourSkip').hidden = TOUR.i === TOUR.steps.length - 1;
+  $('#tourNext').textContent = TOUR.i === TOUR.steps.length - 1 ? 'Done' : 'Next';
+  const cw = card.offsetWidth, ch = card.offsetHeight, m = 12;
+  if (el && tourVisible(el)){
+    const r = el.getBoundingClientRect(), pad = 6;
+    $('#tour').classList.add('spot'); hole.hidden = false;
+    Object.assign(hole.style, { left:(r.left - pad) + 'px', top:(r.top - pad) + 'px', width:(r.width + pad*2) + 'px', height:(r.height + pad*2) + 'px' });
+    let top = r.bottom + pad + m; if (top + ch > innerHeight - m) top = r.top - pad - m - ch;
+    top = Math.max(m, Math.min(top, innerHeight - ch - m));
+    const left = Math.max(m, Math.min(r.left + r.width/2 - cw/2, innerWidth - cw - m));
+    card.style.left = left + 'px'; card.style.top = top + 'px';
+  } else {
+    $('#tour').classList.remove('spot'); hole.hidden = true;
+    card.style.left = Math.max(m, (innerWidth - cw)/2) + 'px'; card.style.top = Math.max(m, (innerHeight - ch)/2) + 'px';
+  }
+  $('#tourNext').focus();
+}
+function tourStart(){
+  helpClose();
+  document.body.classList.remove('ui-hidden'); window.dispatchEvent(new Event('resize'));
+  TOUR.steps = tourSteps().filter(st => !st.s || tourVisible($(st.s)));
+  TOUR.i = 0; TOUR.open = true; $('#tour').hidden = false; tourShow();
+}
+function tourEnd(){ TOUR.open = false; $('#tour').hidden = true; try { localStorage.setItem(TOUR_KEY, '1'); } catch(e){} }
+function tourGo(d){ const n = TOUR.i + d; if (n < 0) return; if (n >= TOUR.steps.length){ tourEnd(); return; } TOUR.i = n; tourShow(); }
+function appInit(){
+  themeApply();
+  if (themeMQ){ const f = () => { if (themeGet() === 'auto') themeApply(); }; themeMQ.addEventListener ? themeMQ.addEventListener('change', f) : themeMQ.addListener(f); }
+  $('#themeSel').addEventListener('change', e => { try { localStorage.setItem(THEME_KEY, e.target.value); } catch(err){} themeApply(); });
+  $('#btnTour').addEventListener('click', tourStart); $('#helpTour').addEventListener('click', tourStart);
+  $('#btnHelp').addEventListener('click', helpOpen); $('#helpClose').addEventListener('click', helpClose);
+  $('#helpSheet').addEventListener('click', e => { if (e.target.id === 'helpSheet') helpClose(); });
+  if (RATE_URL){ ['#btnRate','#helpRate','#rateNote'].forEach(s => { $(s).hidden = false; }); }
+  if (PLAT === 'android') ['#btnRate','#helpRate'].forEach(s => { $(s).textContent = 'Rate on Google Play'; });
+  if (PLAT === 'pc') ['#btnRate','#helpRate'].forEach(s => { $(s).textContent = 'Rate in the Microsoft Store'; });
+  $('#btnRate').addEventListener('click', rateApp); $('#helpRate').addEventListener('click', rateApp);
+  $('#tourNext').addEventListener('click', () => tourGo(1)); $('#tourBack').addEventListener('click', () => tourGo(-1)); $('#tourSkip').addEventListener('click', tourEnd);
+  window.addEventListener('resize', () => { if (TOUR.open) tourShow(); });
+  // While the tour or the help sheet is open the page's own shortcuts stay quiet.
+  window.addEventListener('keydown', e => {
+    if (TOUR.open){
+      if (e.key === 'Escape') tourEnd(); else if (e.key === 'ArrowRight') tourGo(1); else if (e.key === 'ArrowLeft') tourGo(-1);
+      if (e.key.startsWith('Arrow')) e.preventDefault();
+      e.stopPropagation();                                   // Enter / Space / Tab still reach the focused tour button
+    } else if (!$('#helpSheet').hidden){
+      if (e.key === 'Escape') helpClose();
+      e.stopPropagation();
+    }
+  }, true);
+  if (WALL || RECV) return;
+  // First run: new users get the tour once (people who already played something before this version do not).
+  let seen = true; try { seen = !!(localStorage.getItem(TOUR_KEY) || localStorage.getItem('spectral-drift-played')); } catch(e){}
+  if (!seen) setTimeout(() => { if (!document.body.classList.contains('ui-hidden')) tourStart(); }, 1200);
+  // Android: after three minutes of visuals with sound in this session, let the app decide whether to show
+  // Google Play's in-app review (the app counts sessions and Play itself rate-limits the dialog).
+  if (android && typeof android.reviewMaybe === 'function'){
+    let secs = 0; const iv = setInterval(() => {
+      if (document.hidden || TOUR.open) return;
+      if (T.playing || live) secs += 5;
+      if (secs >= 180){ clearInterval(iv); try { android.reviewMaybe(); } catch(e){} }
+    }, 5000);
+  }
+}
+appInit();
 deepAvailUI();
 setEngine(S.engine);
 tipsInit();

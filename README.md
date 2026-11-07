@@ -24,6 +24,10 @@ Bass, mid and high each drive the picture their own way, kicks, snares and hats 
 
 The controls you reach for most are always in view: the visualizer and its scene (with Prev, Random and Next), Play with one **Source** menu (demo loop, a track, the microphone, or what your computer is playing), **Bright**, **Vol** and **Save**. Below them, **Feel** has four sliders (Reaction, Motion, Color pulse, Trails) and a **Music focus** row (Balanced, Bass, Melody, Hits), then the visualizer's own dials, key dials first with the rest one tap away. Everything else waits under **More**: the per-band drives and Dynamics, fine tuning, beat detection, **Auto-change** (off unless you turn it on) and **Render quality**.
 
+## Help, tour and light theme
+
+The first time you open Spectral Drift a short tour points out the few controls you need. **Help & settings**, at the bottom of the dials, replays the tour, opens a Help & FAQ sheet, and switches the controls between a dark theme, a light theme, or whatever your device is set to. The picture itself always stays dark.
+
 ## Your looks on every device
 
 Saved looks stay on the device you made them on. To have them everywhere, press **Sign in with Google** under Saved looks — in the browser, in the Windows app and in the Android app — and they follow you to every device you sign in on. Signing in is optional. (A copy opened straight off the disk as a `file://` page can't sign in: Google needs a web address. Self-hosting your own copy? Add its address under Authentication → Settings → Authorized domains in the Firebase console; until you do, the sign-in button says so and names the address.) It stores your Google sign-in details (account ID, name, email address and profile picture link) and your saved looks in Google Firebase, used for nothing but syncing them. **Sign out** stops syncing; **Delete cloud copy** erases your looks and your sign-in record from it.
